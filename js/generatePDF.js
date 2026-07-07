@@ -32,6 +32,14 @@ function generateQCABPDF(questions) {
     const pageHeight = 297, pageWidth = 210;
     const leftMargin = 25, rightMargin = 185, topMargin = 15, bottomMargin = 282;
 
+    const pageConfig = {
+        10: Number(document.getElementById("pages10").value),
+        15: Number(document.getElementById("pages15").value),
+        20: Number(document.getElementById("pages20").value)
+    };
+    const drawVertical =
+    document.getElementById("drawVertical").checked;
+
     doc.setFont("Times", "Roman");
     doc.setFontSize(12);
 
@@ -66,15 +74,21 @@ function generateQCABPDF(questions) {
     // ---------- PART 2: Render QCAB Pages ----------
 
     questions.forEach((q) => {
-        const pagesNeeded = Math.ceil(q.marks / 6);
+        //const pagesNeeded = Math.ceil(q.marks / 6);
+        const pagesNeeded =
+            pageConfig[q.marks] ?? Math.ceil(q.marks / 6);
 
         for (let p = 0; p < pagesNeeded; p++) {
             doc.addPage();
 
             // Margins
             doc.setLineWidth(0.3);
-            doc.line(leftMargin, topMargin, leftMargin, bottomMargin);
-            doc.line(rightMargin, topMargin, rightMargin, bottomMargin);
+            //doc.line(leftMargin, topMargin, leftMargin, bottomMargin);
+            //doc.line(rightMargin, topMargin, rightMargin, bottomMargin);
+            if (drawVertical) {
+                doc.line(leftMargin, topMargin, leftMargin, bottomMargin);
+                doc.line(rightMargin, topMargin, rightMargin, bottomMargin);
+            }
 
             // Footer
             const footerText = `XXXX-${q.question_id}`;
